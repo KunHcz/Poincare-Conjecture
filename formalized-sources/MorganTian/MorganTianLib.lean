@@ -239,4 +239,10 @@ import MorganTianLib.Ch02.StrictFDerivC1
 import MorganTianLib.Ch02.TiltedPathLength
 import MorganTianLib.Ch02.TraceCommutation
 import MorganTianLib.Ch03
+import MorganTianLib.Ch04
+import MorganTianLib.Ch04.RicciConeODE
+import MorganTianLib.Ch04.RoundnessObstruction
+import MorganTianLib.Ch04.RicciOperatorBoundary
+import MorganTianLib.Ch04.IntrinsicCurvatureReaction
+import MorganTianLib.Ch04.CurvatureMatrixEvolution
 import MorganTianLib.Ch05

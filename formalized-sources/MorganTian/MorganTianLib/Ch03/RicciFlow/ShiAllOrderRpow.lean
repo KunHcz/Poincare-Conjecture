@@ -52,6 +52,34 @@ theorem RiemannianShiTowerCertificate.riemannCovDerivNormAt_le_time_rpow
   rw [hpow] at hbase
   exact hbase
 
+/-! The source theorem is quantified by an order-dependent constant.  The
+certificate projection above has the same information as an explicit
+expression, so expose that existential form for consumers that only need the
+uniform-in-space/time bound. -/
+
+/-- **Math.** A family of finite geometric Shi certificates supplies, at every
+order, a nonnegative constant controlling the curvature derivative at the
+source time scale.  The geometric evolution and cutoff data remain exactly
+the hypotheses of `RiemannianShiTowerCertificate`. -/
+theorem exists_riemannCovDerivNormAt_bound_of_certificate
+    {g : ℝ → RiemannianMetric I M} {K : Set M}
+    {lap : ℕ → M → ℝ → ℝ} {lapCombination : M → ℝ → ℝ}
+    {T : ℝ}
+    (hcert : ∀ k : ℕ,
+      RiemannianShiTowerCertificate (I := I) g K lap lapCombination T k) :
+    ∀ k : ℕ, ∃ Ck : ℝ, 0 ≤ Ck ∧
+      ∀ x ∈ K, ∀ t, 0 < t → t ≤ T →
+        riemannCovDerivNormAt (g t) k x ≤ Ck / t ^ ((k : ℝ) / 2) := by
+  intro k
+  let Ck : ℝ := Real.sqrt
+      (shiCoefficient (hcert k).c k 0 * (hcert k).m ^ 2 +
+        ((hcert k).rho * shiWeightAt (hcert k).c k T +
+          shiCoefficient (hcert k).c k 0 *
+            ((hcert k).kappa * (hcert k).m ^ 2)) * T)
+  refine ⟨Ck, Real.sqrt_nonneg _, ?_⟩
+  intro x hx t htpos htT
+  exact (hcert k).riemannCovDerivNormAt_le_time_rpow x hx t htpos htT
+
 end MorganTianLib
 
 end

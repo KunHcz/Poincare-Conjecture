@@ -11,15 +11,17 @@ for Ricci flow; the tensor maximum principle is due to Hamilton
 
 \begin{proposition}[Evolution bound for minimum scalar curvature]
 \label{prop:scalar-curvature-min-evolution}
+\lean{MorganTianLib.monotoneOn_scalarCurvatureMinimum_of_isRicciFlowOn_Ico, MorganTianLib.scalarCurvatureMinimum_nonnegative_lower_bound_of_isRicciFlowOn, MorganTianLib.scalarCurvatureMinimum_negative_lower_bound_of_isRicciFlowOn, MorganTianLib.lifespan_le_of_isRicciFlowOn_of_scalarCurvatureMinimum_pos}
+\leanok
 \uses{def:ricci-flow, def:ricci-curvature}
 \label{scalarevol}
 Let $(M,g(t)),\ 0\le t<T$, be a Ricci flow on a compact
 $n$-manifold, and let $R_\mathrm{min}(t)$ be the minimum scalar curvature.
 Then $R_\mathrm{min}$ is non-decreasing. If $R_\mathrm{min}(0)\ge0$, then
 \[
-R_\mathrm{min}(t)\ge R_\mathrm{min}(0)\left(\frac{1}{1-\frac{2t}{n}R_\mathrm{min}(0)}\right),
-\qquad T\le\frac{n}{2R_\mathrm{min}(0)}.
+R_\mathrm{min}(t)\ge R_\mathrm{min}(0)\left(\frac{1}{1-\frac{2t}{n}R_\mathrm{min}(0)}\right).
 \]
+If $R_\mathrm{min}(0)>0$, then $T\le n/(2R_\mathrm{min}(0))$.
 If $R_\mathrm{min}(0)<0$, then
 \[
 R_\mathrm{min}(t)\ge-\frac{n|R_\mathrm{min}(0)|}{2t|R_\mathrm{min}(0)|+n}.
@@ -32,7 +34,7 @@ R_\mathrm{min}(t)\ge-\frac{n|R_\mathrm{min}(0)|}{2t|R_\mathrm{min}(0)|+n}.
 At a minimum, $\Delta R\ge0$ and $|R|^2\le n|\Ric|^2$, giving
 the two claims below. Integrating the resulting forward-difference inequality
 for $R_\mathrm{min}$ gives monotonicity and the stated bounds. For
-$R_\mathrm{min}(0)\ne0$, use
+$R_\mathrm{min}$ nonzero throughout $[0,t]$, use
 \[
 S(t)=-R_\mathrm{min}(t)^{-1}-\frac{2t}{n}+R_\mathrm{min}(0)^{-1},
 \qquad S(0)=0,\quad S'(t)\ge0,
@@ -46,6 +48,7 @@ and hence
 \begin{claim}[Time derivative of R at its minimum]
 \label{claim:scalar-min-derivative-bound}
 \uses{def:ricci-curvature}
+\lean{MorganTianLib.scalar_min_deriv_bound_of_isRicciFlowOn}
 \label{firstclaim}
 If $R(x,t)=R_\mathrm{min}(t)$, then
 $(\partial R/\partial t)(x,t)\ge\frac{2}{n}R^2(x,t)$.
@@ -58,6 +61,8 @@ with $|R|^2\le n|\Ric|^2$.
 \begin{claim}[Forward-difference bound for the minimum scalar curvature]
 \label{claim:scalar-min-forward-difference}
 \uses{claim:scalar-min-derivative-bound}
+\lean{MorganTianLib.forwardDiffQuotientGE_scalarCurvatureMinimum_of_isRicciFlowOn_Ico}
+\leanok
 \label{Rminprime}
 \[
 \frac{d}{dt}R_\mathrm{min}(t)\ge\frac{2}{n}R_\mathrm{min}^2(t),
@@ -142,8 +147,8 @@ Let $\overline U\subset M$ be compact, smooth, connected, and codimension
 zero, and let ${\mathcal Z}\subset{\mathcal V}$ be closed, convex, and
 parallel-invariant. If $\psi$ preserves ${\mathcal Z}$ and
 ${\mathcal T}$ satisfies $\partial_t{\mathcal T}=\Delta{\mathcal T}+\psi({\mathcal T})$,
-then ${\mathcal T}(x,0)\in{\mathcal Z}$ on $\overline U$ and boundary values
-remain in ${\mathcal Z}$ iff ${\mathcal T}(x,t)\in{\mathcal Z}$ on
+then ${\mathcal T}(x,0)\in{\mathcal Z}$ on $\overline U$ and, if boundary
+values remain in ${\mathcal Z}$, then ${\mathcal T}(x,t)\in{\mathcal Z}$ on
 \overline U\times[0,T]$.
 This local form is proved in \cite{Hamilton4MPCO}.
 \end{theorem}
@@ -156,6 +161,8 @@ The curvature evolution formulas are used in the standard form
 
 \begin{definition}[Normalized initial conditions for Ricci flow]
 \label{def:normalized-initial-conditions}
+\lean{MorganTianLib.IsNormalizedInitialConditions}
+\leanok
 \uses{def:ricci-flow, def:riemann-curvature-tensor}
 \label{norminitcond}
 A Ricci flow has normalized initial conditions when its initial time is zero,
@@ -326,17 +333,27 @@ nonconstant nonzero eigenvalue along cone lines, whereas local splitting makes
 that eigenvalue constant along the parallel null line. Contradiction.
 \end{proof}
 
-\begin{theorem}[Compact non-negative Ricci flows become round]
+\begin{theorem}[Compact positive-Ricci flows become round; corrected form]
 \label{thm:nonnegative-ricci-flow-becomes-round}
-\uses{cor:nonnegative-ricci-preserved}
+\uses{def:curvature-operator,cor:nonnegative-ricci-preserved}
 \label{flowtoround}
-For a compact three-dimensional flow with $\Ric(0)\ge0$, either the flow is
-flat or $\Ric>0$ for positive times. In the maximal positive case,
+Let $(M,g(t))$, $0\le t<T$ with $T>0$, be a maximal Ricci flow on a nonempty compact
+connected three-manifold without boundary, with $\Ric(g(0))$ positive
+definite. Then $T<\infty$ and $\Ric(g(t))$ remains positive definite.
+Let $\lambda(x,t)$ and $\nu(x,t)$ be the largest and smallest eigenvalues
+of the self-adjoint curvature operator on $\wedge^2T_xM$, using the induced
+exterior metric and the normalization
+$\Rm(u\wedge v,u\wedge v)=K(u\wedge v)$ for orthonormal $u,v$. Then
 \[
-\lim_{t\to T}\frac{\max_{x\in M}\lambda(x,t)}{\min_{x\in M}\nu(x,t)}=1,
+\lim_{t\nearrow T}\frac{\max_{x\in M}\lambda(x,t)}{\min_{x\in M}\nu(x,t)}=1,
 \]
-$\lambda(x,t)\to\infty$, and rescaling by $\lambda(x,t)$ converges smoothly
-to a compact round manifold, hence a spherical space-form.
+and $\lambda(x,t)\to\infty$ for every $x\in M$. For any fixed $p\in M$,
+the spatially constant rescaling $\lambda(p,t)g(t)$ converges smoothly on
+$M$ as $t\nearrow T$ to a metric of constant sectional curvature $1$.
+Consequently, $M$ is diffeomorphic to a three-dimensional spherical
+space-form. This is the positive-Ricci form of Hamilton's theorem
+\cite{Hamilton3MPRC}; the printed nonnegative-Ricci dichotomy is excluded
+by the shrinking product flow on $S^2\times S^1$.
 \end{theorem}
 
 \subsection{Solitons of positive curvature}
@@ -421,6 +438,8 @@ $S\ge-3$. If $0<X(x,0)\le1$, then $S\ge-3X\ge X(\log X-3)$.
 
 \begin{claim}[Non-negativity of the auxiliary quantity I]
 \label{claim:pinching-auxiliary-quantity-nonnegative}
+\lean{MorganTianLib.pinching_auxiliary_nonneg_of_ordered_eigenvalues}
+\leanok
 $I\ge0$, where $X=-\nu$, $Y=-\mu$, and
 \[
 I=XY^2+\lambda Y(Y-X)+\lambda^2(X-Y).

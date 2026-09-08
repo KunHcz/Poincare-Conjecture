@@ -79,6 +79,30 @@ theorem cauchySeq_tendsto_mem_stage_of_radial_stage_coverage
   apply (S.isCompact_range_stageEmbedding n).isClosed.mem_of_tendsto hy
   exact Filter.Eventually.of_forall (fun k => hn (Set.mem_range.2 ⟨k, rfl⟩))
 
+/-! The preceding limit statement can be strengthened to retain the whole
+sequence in the same compact stage.  This is the form used by diagonal
+compactness arguments, where the approximating points and their limit must be
+compared inside one stage image. -/
+
+/-- **Math.** A convergent Cauchy sequence and its limit are contained in one
+compact stage image under radial closed-ball coverage. -/
+theorem exists_stageEmbedding_range_and_limit_of_cauchySeq
+    (S : CompatiblePointedCompactSystem.{u})
+    (hcover : ∀ R : ℝ, ∃ n : ℕ,
+      Metric.closedBall S.completedLimit.base R ⊆
+        Set.range (S.stageEmbedding n))
+    (u : ℕ → S.completedLimit.carrier) (hu : CauchySeq u)
+    {y : S.completedLimit.carrier}
+    (hy : Tendsto u atTop (𝓝 y)) :
+    ∃ n : ℕ, Set.range u ⊆ Set.range (S.stageEmbedding n) ∧
+      y ∈ Set.range (S.stageEmbedding n) := by
+  have hbounded : Bornology.IsBounded (Set.range u) := hu.isBounded_range
+  obtain ⟨n, hn, _⟩ :=
+    S.exists_eventually_stageEmbedding_range_superset_of_bounded hcover hbounded
+  refine ⟨n, hn, ?_⟩
+  apply (S.isCompact_range_stageEmbedding n).isClosed.mem_of_tendsto hy
+  exact Filter.Eventually.of_forall (fun k => hn (Set.mem_range.2 ⟨k, rfl⟩))
+
 end CompatiblePointedCompactSystem
 
 end MorganTianLib
@@ -86,3 +110,4 @@ end MorganTianLib
 #print axioms MorganTianLib.CompatiblePointedCompactSystem.exists_stageEmbedding_range_superset_of_closedBall
 #print axioms MorganTianLib.CompatiblePointedCompactSystem.exists_eventually_stageEmbedding_range_superset_of_bounded
 #print axioms MorganTianLib.CompatiblePointedCompactSystem.cauchySeq_tendsto_mem_stage_of_radial_stage_coverage
+#print axioms MorganTianLib.CompatiblePointedCompactSystem.exists_stageEmbedding_range_and_limit_of_cauchySeq

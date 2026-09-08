@@ -6,6 +6,10 @@ import MorganTianLib.Ch05.ConvergentFiniteNets
 import MorganTianLib.Ch05.Completion
 import MorganTianLib.Ch05.Precompactness
 import MorganTianLib.Ch05.PointedGH
+import MorganTianLib.Ch05.PointedGHNetCharacterization
+import MorganTianLib.Ch05.FixedNetTransport
+import MorganTianLib.Ch05.PointedGHAmbientUniverse
+import MorganTianLib.Ch05.PointedGHCompactDefiniteness
 import MorganTianLib.Ch05.ClosedBallCompatibility
 import MorganTianLib.Ch05.CrossRadiusLimitDistance
 import MorganTianLib.Ch05.CompactBallNetAssembly
@@ -13,6 +17,7 @@ import MorganTianLib.Ch05.LengthCone
 import MorganTianLib.Ch05.UnboundedAssembly
 import MorganTianLib.Ch05.UnboundedSourceTransport
 import MorganTianLib.Ch05.CompatibleBallLimits
+import MorganTianLib.Ch05.MarkedCrossRadiusLimit
 import MorganTianLib.Ch05.ConnectedAssembly
 import MorganTianLib.Ch05.CompatibleTransitions
 import MorganTianLib.Ch05.TransitionExtractionOptimal
@@ -40,11 +45,13 @@ import MorganTianLib.Ch05.CompletedLimitNetAssembly
 import MorganTianLib.Ch05.CompactStageDiagonal
 import MorganTianLib.Ch05.BoundedStageCompactness
 import MorganTianLib.Ch05.ClosedBallTransition
+import MorganTianLib.Ch05.MarkedRadialLimit
 import MorganTianLib.Ch05.CompatibleStageConvergence
 import MorganTianLib.Ch05.NestedCompactTransition
 import MorganTianLib.Ch05.MarkedGHBridge
 import MorganTianLib.Ch05.MarkedGHExtraction
 import MorganTianLib.Ch05.MarkedPackingExtraction
+import MorganTianLib.Ch05.MarkedPackingDiagonal
 import MorganTianLib.Ch05.MarkedNestedAssembly
 
 /-! Chapter 5: convergence results. -/

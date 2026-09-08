@@ -236,6 +236,24 @@ theorem isDeltaRegular_iff_isIntrinsicExpRegularAt_of_complete_and_proper
   · intro _
     exact isDeltaRegular_of_properSpace δ p
 
+/-! The component form is the one consumed by the source's regular-region
+construction.  It keeps connected-component membership visible while
+delegating the metric/exponential equivalence to the pointwise producer. -/
+
+theorem isIntrinsicExpRegularAt_of_mem_regComponent
+    {E : Type*} [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    [NeZero (Module.finrank ℝ E)]
+    {H : Type*} [TopologicalSpace H]
+    {I' : ModelWithCorners ℝ E H} [I'.Boundaryless]
+    {M : Type*} [MetricSpace M] [ChartedSpace H M] [IsManifold I' ∞ M]
+    [CompleteSpace M] [ProperSpace M]
+    {g : Riemannian.RiemannianMetric I' M} (hg : g.IsRiemannianDist)
+    {δ : ℝ} {x p : M} (hp : p ∈ regComponent δ x) :
+    IsIntrinsicExpRegularAt g δ p := by
+  exact (isDeltaRegular_iff_isIntrinsicExpRegularAt_of_complete_and_proper
+    g hg δ p).mp (isDeltaRegular_mem_regComponent hp)
+
 /-! The scale-uniform exponential formulation is the non-vacuous local
 completeness bridge behind the source's delta-regular equivalence. -/
 

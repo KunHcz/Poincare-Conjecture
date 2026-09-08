@@ -1,4 +1,5 @@
 import MorganTianLib.Ch03.RicciFlow.CurvatureCoordinateVariation
+import MorganTianLib.Ch01.TraceRiccati
 
 /-!
 # Scalar-curvature evolution
@@ -54,6 +55,26 @@ theorem inner_ricciEndomorphismAt (g : RiemannianMetric I M) (p : M)
     (Riemannian.rieszInvEquiv (TangentSpace I p) (ricciTensorAt g p v)) w = _
   exact Riemannian.rieszInvEquiv_inner (ricciTensorAt g p v) w
 
+/-- **Math.** The Ricci endomorphism is self-adjoint for the metric inner
+product.  This is the symmetry hypothesis needed by the finite-dimensional
+trace Cauchy--Schwarz inequality. -/
+theorem ricciEndomorphismAt_selfAdjoint (g : RiemannianMetric I M) (p : M) :
+    letI : Bundle.RiemannianBundle (TangentSpace I : M → Type _) :=
+      ⟨g.toRiemannianMetric⟩
+    ∀ v w : TangentSpace I p,
+      inner ℝ (ricciEndomorphismAt g p v) w =
+        inner ℝ v (ricciEndomorphismAt g p w) := by
+  letI : Bundle.RiemannianBundle (TangentSpace I : M → Type _) :=
+    ⟨g.toRiemannianMetric⟩
+  intro v w
+  calc
+    inner ℝ (ricciEndomorphismAt g p v) w = ricciTensorAt g p v w :=
+      inner_ricciEndomorphismAt g p v w
+    _ = ricciTensorAt g p w v := ricciTensorAt_symm g p v w
+    _ = inner ℝ (ricciEndomorphismAt g p w) v :=
+      (inner_ricciEndomorphismAt g p w v).symm
+    _ = inner ℝ v (ricciEndomorphismAt g p w) := real_inner_comm _ _
+
 /-- **Math.** The squared norm `|Ric|^2`, expressed as the trace of the square
 of the Ricci endomorphism. -/
 noncomputable def ricciNormSqAt (g : RiemannianMetric I M) (p : M) : ℝ :=
@@ -62,6 +83,47 @@ noncomputable def ricciNormSqAt (g : RiemannianMetric I M) (p : M) : ℝ :=
   LinearMap.trace ℝ (TangentSpace I p)
     ((ricciEndomorphismAt g p).toLinearMap *
       (ricciEndomorphismAt g p).toLinearMap)
+
+/-- **Math.** Scalar curvature is the trace of the Ricci endomorphism. -/
+theorem scalarCurvatureAt_eq_trace_ricciEndomorphismAt
+    (g : RiemannianMetric I M) (p : M)
+    (hLC : g.leviCivitaConnection.IsLeviCivita g) :
+    scalarCurvatureAt g g.leviCivitaConnection hLC p =
+      LinearMap.trace ℝ (TangentSpace I p)
+        (ricciEndomorphismAt g p).toLinearMap := by
+  letI : Bundle.RiemannianBundle (TangentSpace I : M → Type _) :=
+    ⟨g.toRiemannianMetric⟩
+  let e := stdOrthonormalBasis ℝ (TangentSpace I p)
+  rw [LinearMap.trace_eq_sum_inner _ e]
+  simp only [ContinuousLinearMap.coe_coe]
+  have hscalar :
+      scalarCurvatureAt g g.leviCivitaConnection hLC p =
+        ∑ i, ricciTensorAt g p (e i) (e i) := by
+    simp only [scalarCurvatureAt, scalarCurvature]
+    rw [Riemannian.scalarCurvature_eq_sum_ricci _ e]
+    refine Finset.sum_congr rfl fun i _ => ?_
+    change ricciAt g g.leviCivitaConnection hLC p (e i) (e i) = _
+    exact ricciAt_leviCivita_eq_ricciTensorAt g hLC p (e i) (e i)
+  rw [hscalar]
+  refine Finset.sum_congr rfl fun i _ => ?_
+  rw [real_inner_comm]
+  exact (inner_ricciEndomorphismAt g p (e i) (e i)).symm
+
+/-- **Math.** The scalar curvature and Ricci norm satisfy the trace
+Cauchy--Schwarz inequality, the intrinsic algebraic input to Hamilton's
+scalar minimum estimate. -/
+theorem scalarCurvature_sq_le_finrank_mul_ricciNormSqAt
+    (g : RiemannianMetric I M) (p : M)
+    (hLC : g.leviCivitaConnection.IsLeviCivita g) :
+    scalarCurvatureAt g g.leviCivitaConnection hLC p ^ 2 ≤
+      (Module.finrank ℝ (TangentSpace I p) : ℝ) * ricciNormSqAt g p := by
+  letI : Bundle.RiemannianBundle (TangentSpace I : M → Type _) :=
+    ⟨g.toRiemannianMetric⟩
+  have htrace := sq_trace_le_finrank_mul_trace_comp_self
+    (E := TangentSpace I p) (A := ricciEndomorphismAt g p)
+    (ricciEndomorphismAt_selfAdjoint g p)
+  rw [scalarCurvatureAt_eq_trace_ricciEndomorphismAt g p hLC]
+  exact htrace
 
 omit [CompleteSpace E] [I.Boundaryless] [SigmaCompactSpace M] [T2Space M] in
 /-- **Math.** The squared Ricci norm in a fixed chart, as the complete
@@ -222,6 +284,9 @@ theorem chartScalarCurvatureVariationOnE_eq_reaction_add_ricciVariation
 #print axioms MorganTianLib.chartRicciNormSqOnE_eq_ricciNormSqAt
 #print axioms MorganTianLib.chartInvMetricRicciContractionOnE_neg_two_ricci
 #print axioms MorganTianLib.chartScalarCurvatureVariationOnE_eq_reaction_add_ricciVariation
+#print axioms MorganTianLib.ricciEndomorphismAt_selfAdjoint
+#print axioms MorganTianLib.scalarCurvatureAt_eq_trace_ricciEndomorphismAt
+#print axioms MorganTianLib.scalarCurvature_sq_le_finrank_mul_ricciNormSqAt
 
 end MorganTianLib
 

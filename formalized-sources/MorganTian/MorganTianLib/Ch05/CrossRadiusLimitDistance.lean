@@ -1,4 +1,5 @@
 import MorganTianLib.Ch05.ClosedBallCompatibility
+import MorganTianLib.Ch05.PointedGHCompactDefiniteness
 
 /-!
 # Morgan--Tian Chapter 5: distance control for independent radius limits
@@ -122,6 +123,25 @@ theorem pointedGHDistance_closedBall_limits_eq_zero_of_same_radius
         L₁ L₂ hconv₁ hconv₂)
   · exact pointedGHDistance_nonneg L₁ L₂
 
+/-- **Math.** Compact limits of the same-radius closed-ball sequence are
+basepoint-preservingly isometric.  This is the transition map that can be
+used when two radius-wise constructions chose different compact targets; it
+does not identify limits at different radii. -/
+theorem exists_basedIsometry_of_sameRadius_closedBall_limits
+    (X : ℕ -> BasedMetricSpaceBundle.{u})
+    [∀ k, LengthSpace (X k).carrier]
+    (r : Real) (hr : 0 <= r)
+    (L₁ L₂ : FiniteDiameterBasedMetricSpace.{u})
+    [CompactSpace L₁.carrier] [CompactSpace L₂.carrier]
+    (hconv₁ : PointedGHConverges
+      (fun k => closedBallModel (X k) r hr) L₁)
+    (hconv₂ : PointedGHConverges
+      (fun k => closedBallModel (X k) r hr) L₂) :
+    ∃ e : L₁.carrier ≃ᵢ L₂.carrier, e L₁.base = L₂.base := by
+  apply exists_basedIsometry_of_pointedGHDistance_eq_zero
+  exact pointedGHDistance_closedBall_limits_eq_zero_of_same_radius
+    X r hr L₁ L₂ hconv₁ hconv₂
+
 /-- **Math.** If two selections of a radius-indexed compact-limit family have
 asymptotically equal radii, then their pointed Gromov--Hausdorff distance tends
 to zero.  The estimate is uniform in the choices of compact target
@@ -228,6 +248,7 @@ end MorganTianLib
 #print axioms MorganTianLib.pointedGHDistance_closedBall_limits_le_sub
 #print axioms MorganTianLib.pointedGHDistance_closedBall_limits_le_abs_sub
 #print axioms MorganTianLib.pointedGHDistance_closedBall_limits_eq_zero_of_same_radius
+#print axioms MorganTianLib.exists_basedIsometry_of_sameRadius_closedBall_limits
 #print axioms MorganTianLib.pointedGHDistance_closedBall_limits_tendsto_zero_of_radius_gap
 #print axioms MorganTianLib.exists_crossRadiusLimit_realization_lt
 #print axioms MorganTianLib.exists_crossRadiusLimit_realization_sequence

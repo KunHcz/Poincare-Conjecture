@@ -1,4 +1,5 @@
 import MorganTianLib.Ch05.CompatibleBallLimits
+import MorganTianLib.Ch05.PointedGHCompactDefiniteness
 
 /-!
 # Morgan--Tian Chapter 5: marked transition extraction
@@ -57,6 +58,57 @@ def ofCommonLimits
       (stage n).toFiniteDiameterBasedMetricSpace
       (inner n).toFiniteDiameterBasedMetricSpace
       (hstage n) (hinner n) (hattain n)
+  choose e he using h_exists
+  exact
+    { stage := stage
+      transition := fun n => embed n ∘ e n
+      transition_isometry := fun n => (embed_isometry n).comp (e n).isometry
+      transition_base := fun n => by
+        simp only [Function.comp_apply]
+        change embed n
+          ((e n) ((stage n).toFiniteDiameterBasedMetricSpace.base)) =
+            (stage (n + 1)).base
+        rw [he n]
+        exact embed_base n }
+
+/-! The compact pointed-definiteness producer removes the need to pass an
+explicit realization attaining each pointed distance.  The older constructor
+above is retained for callers that already have such realizations. -/
+
+/-- **Math.** Extract a compatible pointed compact system from common compact
+pointed-GH limits without an explicit attainment premise.  Compactness of the
+two stage carriers and the common source limits supply the based isometry at
+each stage; the supplied inner-to-next-stage embedding supplies the transition.
+-/
+noncomputable def ofCommonLimits_of_compact_limits
+    (stage inner : ℕ → PointedCompactMetricSpace.{u})
+    (source : ℕ → ℕ → FiniteDiameterBasedMetricSpace.{u})
+    (hstage : ∀ n, PointedGHConverges
+      (fun k => source n k)
+      (stage n).toFiniteDiameterBasedMetricSpace)
+    (hinner : ∀ n, PointedGHConverges
+      (fun k => source n k)
+      (inner n).toFiniteDiameterBasedMetricSpace)
+    (embed : ∀ n, (inner n).carrier → (stage (n + 1)).carrier)
+    (embed_isometry : ∀ n, Isometry (embed n))
+    (embed_base : ∀ n, embed n (inner n).base = (stage (n + 1)).base) :
+    CompatiblePointedCompactSystem.{u} := by
+  have h_exists (n : ℕ) :
+      ∃ e : (stage n).toFiniteDiameterBasedMetricSpace.carrier ≃ᵢ
+          (inner n).toFiniteDiameterBasedMetricSpace.carrier,
+        e (stage n).toFiniteDiameterBasedMetricSpace.base =
+          (inner n).toFiniteDiameterBasedMetricSpace.base := by
+    letI : CompactSpace
+        (stage n).toFiniteDiameterBasedMetricSpace.carrier :=
+      (stage n).compact
+    letI : CompactSpace
+        (inner n).toFiniteDiameterBasedMetricSpace.carrier :=
+      (inner n).compact
+    exact exists_basedIsometry_of_common_pointedGH_limit
+      (fun k => source n k)
+      (stage n).toFiniteDiameterBasedMetricSpace
+      (inner n).toFiniteDiameterBasedMetricSpace
+      (hstage n) (hinner n)
   choose e he using h_exists
   exact
     { stage := stage
@@ -152,5 +204,7 @@ theorem transitionChain_comp
       rw [← Function.comp_assoc, stageEmbedding_comp_transitionChain]
 
 end CompatiblePointedCompactSystem
+
+#print axioms MorganTianLib.CompatiblePointedCompactSystem.ofCommonLimits_of_compact_limits
 
 end MorganTianLib

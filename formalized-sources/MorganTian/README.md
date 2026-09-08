@@ -14,6 +14,7 @@ in the root `PoincareConjecture/` project.
 | `MorganTianLib/Ch01/` | Riemannian preliminaries and comparison geometry |
 | `MorganTianLib/Ch02/` | Nonnegative curvature, Busemann functions, splitting, and ends |
 | `MorganTianLib/Ch03/RicciFlow/` | Ricci-flow, space-time, and curvature-variation infrastructure |
+| `MorganTianLib/Ch04/` | Hamilton maximum principle and tensor-contact infrastructure |
 | `MorganTianLib/Ch05/` | Geometric-limit, packing, and pointed-GH convergence infrastructure |
 | `MorganTianLib.lean` | Aggregate Lean import |
 | `blueprint/src/chapters/` | Distilled mathematical chapters and Lean status annotations |

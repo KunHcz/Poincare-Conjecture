@@ -235,6 +235,62 @@ theorem radial_stage_coverage_of_transitionChainClosedBallMap_surjective
   exact (closure_minimal hlocal hC)
     ((hU.open_subset_closure_inter Metric.isOpen_ball) hyball)
 
+/-- **Math.** If each consecutive transition covers the strict inner ball of
+its natural radius, every transition chain starting beyond a fixed radius is
+surjective on that closed ball.  The strict radius buffer is preserved while
+pulling a point back through successive transitions. -/
+theorem transitionChainClosedBallMap_surjective_of_inner_ball_range
+    (S : CompatiblePointedCompactSystem.{u})
+    (hinner : ∀ i : ℕ,
+      Metric.ball (S.stage (i + 1)).base (i : ℝ) ⊆
+        Set.range (S.transition i))
+    {n : ℕ} {R : ℝ} (hRn : R < (n : ℝ)) (k : ℕ) :
+    Function.Surjective (S.transitionChainClosedBallMap n k R) := by
+  induction k with
+  | zero =>
+      intro y
+      exact ⟨y, rfl⟩
+  | succ k ih =>
+      intro y
+      have hRnk : R < ((n + k : ℕ) : ℝ) :=
+        hRn.trans_le (by exact_mod_cast Nat.le_add_right n k)
+      have hyinner : (y : (S.stage (n + (k + 1))).carrier) ∈
+          Metric.ball (S.stage (n + k + 1)).base ((n + k : ℕ) : ℝ) :=
+        Metric.mem_ball.mpr (y.property.trans_lt hRnk)
+      obtain ⟨x, hx⟩ := hinner (n + k) hyinner
+      have hxball : x ∈ Metric.closedBall (S.stage (n + k)).base R := by
+        apply Metric.mem_closedBall.mpr
+        calc
+          dist x (S.stage (n + k)).base =
+              dist (S.transition (n + k) x)
+                (S.transition (n + k) (S.stage (n + k)).base) :=
+            ((S.transition_isometry (n + k)).dist_eq _ _).symm
+          _ = dist (y : (S.stage (n + (k + 1))).carrier)
+                (S.stage (n + k + 1)).base := by
+            rw [hx, S.transition_base]
+          _ ≤ R := y.property
+      obtain ⟨w, hw⟩ := ih ⟨x, hxball⟩
+      refine ⟨w, Subtype.ext ?_⟩
+      change S.transition (n + k) (S.transitionChain n k w) = y
+      exact (congrArg (S.transition (n + k)) (congrArg Subtype.val hw)).trans hx
+
+/-- **Math.** Strict inner-ball coverage by consecutive compact transitions
+implies radial closed-ball coverage of the completed inductive limit.  A stage
+beyond `R + 1` captures the dense union locally, and its compact image is closed.
+No length-space or boundary-surjectivity hypothesis is needed for this step. -/
+theorem radial_stage_coverage_of_inner_ball_range
+    (S : CompatiblePointedCompactSystem.{u})
+    (hinner : ∀ i : ℕ,
+      Metric.ball (S.stage (i + 1)).base (i : ℝ) ⊆
+        Set.range (S.transition i)) :
+    ∀ R : ℝ, ∃ n : ℕ,
+      Metric.closedBall S.completedLimit.base R ⊆
+        Set.range (S.stageEmbedding n) := by
+  apply S.radial_stage_coverage_of_transitionChainClosedBallMap_surjective
+  intro R
+  obtain ⟨n, hn⟩ := exists_nat_gt (R + 1)
+  exact ⟨n, S.transitionChainClosedBallMap_surjective_of_inner_ball_range hinner hn⟩
+
 end CompatiblePointedCompactSystem
 
 end MorganTianLib
@@ -249,3 +305,5 @@ end
 #print axioms MorganTianLib.CompatiblePointedCompactSystem.transitionChainClosedBallEquiv_of_coverage_base
 #print axioms MorganTianLib.CompatiblePointedCompactSystem.stageClosedBallEquiv_of_coverage_comp_transitionChainClosedBallEquiv
 #print axioms MorganTianLib.CompatiblePointedCompactSystem.radial_stage_coverage_of_transitionChainClosedBallMap_surjective
+#print axioms MorganTianLib.CompatiblePointedCompactSystem.transitionChainClosedBallMap_surjective_of_inner_ball_range
+#print axioms MorganTianLib.CompatiblePointedCompactSystem.radial_stage_coverage_of_inner_ball_range

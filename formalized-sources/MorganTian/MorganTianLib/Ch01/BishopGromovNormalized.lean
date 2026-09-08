@@ -52,7 +52,7 @@ theorem normalizedGpHaar_scalar_ne_zero_top
   exact ⟨ENNReal.inv_ne_zero.mpr htop,
     ENNReal.inv_ne_top.mpr hzero⟩
 
-private theorem normalized_measure_apply
+theorem riemannianMeasure_normalizedGpHaar_apply
     (g : RiemannianMetric I M) (p : M) (r : ℝ) :
     riemannianMeasure (I := I) g (normalizedGpHaar (I := I) g p)
         (Metric.ball p r) =
@@ -61,6 +61,19 @@ private theorem normalized_measure_apply
           (Metric.ball p r) := by
   rw [normalizedGpHaar, riemannianMeasure_smul, Measure.smul_apply]
   rfl
+
+/-- **Math.** The explicitly normalized tangent-space reference is still an
+additive Haar measure.  This lets downstream measure arguments install the
+normalized convention as a local typeclass without changing the fixed
+`gpHaar` definition or asserting that its origin density is `1`. -/
+theorem normalizedGpHaar_isAddHaarMeasure
+    (g : RiemannianMetric I M) (p : M) :
+    (normalizedGpHaar (I := I) g p).IsAddHaarMeasure := by
+  change Measure.IsAddHaarMeasure
+    ((gpHaarOriginDensity (I := I) g p)⁻¹ • gpHaar (I := I) g p)
+  exact Measure.IsAddHaarMeasure.smul (gpHaar (I := I) g p)
+    (normalizedGpHaar_scalar_ne_zero_top (I := I) g p).1
+    (normalizedGpHaar_scalar_ne_zero_top (I := I) g p).2
 
 /-- **Math.** Bishop--Gromov antitonicity survives the explicit
 inverse-origin-density normalization of the Haar reference. -/
@@ -103,8 +116,8 @@ theorem antitoneOn_normalized_riemannianMeasure_ratio
       riemannianMeasure (I := I) g (normalizedGpHaar (I := I) g p)
         (Metric.ball p r₁) /
       modelBallVolume (volume : Measure 𝔼)  k r₁
-  rw [normalized_measure_apply (I := I) g p r₁,
-    normalized_measure_apply (I := I) g p r₂]
+  rw [riemannianMeasure_normalizedGpHaar_apply (I := I) g p r₁,
+    riemannianMeasure_normalizedGpHaar_apply (I := I) g p r₂]
   calc
     (gpHaarOriginDensity (I := I) g p)⁻¹ *
         riemannianMeasure (I := I) g (gpHaar (I := I) g p)
@@ -269,3 +282,5 @@ end
 #print axioms MorganTianLib.tendsto_normalized_riemannianMeasure_ball_ratio_nhdsGT_zero
 #print axioms MorganTianLib.antitoneOn_normalized_riemannianMeasure_div_power
 #print axioms MorganTianLib.normalized_riemannianMeasure_ball_le_flat_model
+#print axioms MorganTianLib.riemannianMeasure_normalizedGpHaar_apply
+#print axioms MorganTianLib.normalizedGpHaar_isAddHaarMeasure
