@@ -16,6 +16,8 @@ import MorganTianLib.Ch04.CurvatureApplications
 import MorganTianLib.Ch04.PinchingAlgebra
 import MorganTianLib.Ch04.PositiveRicciPinching
 import MorganTianLib.Ch04.PositiveRicciConeODE
+import MorganTianLib.Ch04.PositiveRicciOperatorCone
+import MorganTianLib.Ch04.PositiveRicciOperatorReaction
 import MorganTianLib.Ch04.TraceFreeRicciGap
 import MorganTianLib.Ch04.TensorParallelTransport
 import MorganTianLib.Ch04.TensorBundleTransport
