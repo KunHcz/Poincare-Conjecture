@@ -1,4 +1,5 @@
 import MorganTianLib.Ch05.CompatibleBallEmbedding
+import MorganTianLib.Ch05.CrossRadiusLimitDistance
 
 /-!
 # Morgan--Tian Chapter 5: canonical compact-coupling transition extraction
@@ -86,6 +87,25 @@ theorem exists_attainment_of_based_isometry
   have hzero := pointedGHDistance_eq_zero_of_basedIsometry X Y e hbase
   rw [hzero, hR]
 
+/-- **Math.** Same-radius compact closed-ball limits admit an attained pointed
+Gromov--Hausdorff realization.  The based isometry comes from the common
+closed-ball limit, and the realization is the explicit zero-error coupling. -/
+theorem exists_attainment_of_sameRadius_closedBall_limits
+    (X : ℕ -> BasedMetricSpaceBundle.{u})
+    [∀ k, LengthSpace (X k).carrier]
+    (r : ℝ) (hr : 0 ≤ r)
+    (L₁ L₂ : FiniteDiameterBasedMetricSpace.{u})
+    [CompactSpace L₁.carrier] [CompactSpace L₂.carrier]
+    (hconv₁ : PointedGHConverges
+      (fun k => closedBallModel (X k) r hr) L₁)
+    (hconv₂ : PointedGHConverges
+      (fun k => closedBallModel (X k) r hr) L₂) :
+    ∃ R : PointedGHRealization L₁ L₂,
+      pointedGHDistance L₁ L₂ = pointedHausdorffDist R := by
+  obtain ⟨e, hbase⟩ := exists_basedIsometry_of_sameRadius_closedBall_limits
+    X r hr L₁ L₂ hconv₁ hconv₂
+  exact exists_attainment_of_based_isometry e hbase
+
 namespace CompatiblePointedCompactSystem
 
 /-- **Math.** Canonical compact-coupling base agreement supplies the attainment
@@ -157,14 +177,15 @@ noncomputable def ofCommonLimits_of_nested_closedBall_optimal_base_agreement
     (hbase n)
 
 /-! In the nested closed-ball situation, the two displayed identifications
-already provide a based isometry between each pair of limits.  Consequently no
-canonical-coupling base-agreement premise is needed: attainment follows from
-the explicit zero-error realization induced by that based isometry. -/
+provide the transition embedding.  The compact common-limit constructor now
+supplies the based isometries without requiring an explicit pointed-distance
+attainment witness. -/
 
 /-- **Math.** Nested closed-ball identifications with compatible basepoints
-directly extract the compatible transition system.  The attainment and
-canonical-coupling premises are derived internally from the based isometry
-between the two copies of each closed ball. -/
+directly extract the compatible transition system.  The common-limit data and
+compactness supply the stage identifications, while the nested models supply
+the transition embedding; no attainment or canonical-coupling premise is
+needed. -/
 noncomputable def ofCommonLimits_of_nested_closedBall_identifications_of_based_models
     (X : BasedMetricSpaceBundle.{u}) [LengthSpace X.carrier]
     (stage inner : ℕ → PointedCompactMetricSpace.{u})
@@ -188,40 +209,26 @@ noncomputable def ofCommonLimits_of_nested_closedBall_identifications_of_based_m
       ball_to_stage n (closedBallModel X (r n) (hr n)).base =
         (stage n).base) :
     CompatiblePointedCompactSystem.{u} := by
-  let e : ∀ n, (stage n).carrier ≃ᵢ (inner n).carrier := fun n =>
-    (ball_to_stage n).symm.trans (inner_to_ball n).symm
-  have hebase : ∀ n, e n (stage n).base = (inner n).base := by
+  let embed : ∀ n, (inner n).carrier → (stage (n + 1)).carrier := fun n =>
+    (ball_to_stage (n + 1)) ∘
+      (closedBallModelInclusion X (r n) (r (n + 1)) (hr n) (hr (n + 1))
+        (hmono n)) ∘
+      (inner_to_ball n)
+  have hembed_isometry : ∀ n, Isometry (embed n) := by
     intro n
-    have hs :
-        (ball_to_stage n).symm (stage n).base =
-          (closedBallModel X (r n) (hr n)).base := by
-      apply (ball_to_stage n).injective
-      simp [ball_to_stage_base n]
-    have hi :
-        (inner_to_ball n).symm (closedBallModel X (r n) (hr n)).base =
-          (inner n).base := by
-      apply (inner_to_ball n).injective
-      simp [inner_to_ball_base n]
-    change (inner_to_ball n).symm
-        ((ball_to_stage n).symm (stage n).base) = (inner n).base
-    rw [hs, hi]
-  have hattain : ∀ n, ∃ R : PointedGHRealization
-      (stage n).toFiniteDiameterBasedMetricSpace
-      (inner n).toFiniteDiameterBasedMetricSpace,
-      pointedGHDistance
-          (stage n).toFiniteDiameterBasedMetricSpace
-          (inner n).toFiniteDiameterBasedMetricSpace =
-        pointedHausdorffDist R := by
+    exact (ball_to_stage (n + 1)).isometry.comp
+      ((closedBallModelInclusion_isometry X (r n) (r (n + 1))
+        (hr n) (hr (n + 1)) (hmono n)).comp (inner_to_ball n).isometry)
+  have hembed_base : ∀ n,
+      embed n (inner n).base = (stage (n + 1)).base := by
     intro n
-    exact exists_attainment_of_based_isometry (e n) (hebase n)
-  exact ofCommonLimits_of_nested_closedBall_identifications
-    (X := X) (stage := stage) (inner := inner) (source := source)
-    (hstage := hstage) (hinner := hinner) (hattain := hattain)
-    (r := r) (hr := hr) (hmono := hmono)
-    (inner_to_ball := inner_to_ball)
-    (inner_to_ball_base := inner_to_ball_base)
-    (ball_to_stage := ball_to_stage)
-    (ball_to_stage_base := ball_to_stage_base)
+    dsimp [embed]
+    rw [inner_to_ball_base n]
+    rw [closedBallModelInclusion_base X (r n) (r (n + 1))
+      (hr n) (hr (n + 1)) (hmono n)]
+    exact ball_to_stage_base (n + 1)
+  exact ofCommonLimits_of_compact_limits stage inner source hstage hinner
+    embed hembed_isometry hembed_base
 
 end CompatiblePointedCompactSystem
 

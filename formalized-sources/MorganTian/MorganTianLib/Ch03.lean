@@ -52,6 +52,9 @@ import MorganTianLib.Ch03.RicciFlow.DistanceVariation
 import MorganTianLib.Ch03.RicciFlow.DistanceVariationInterface
 import MorganTianLib.Ch03.RicciFlow.DistanceIntegralBound
 import MorganTianLib.Ch03.RicciFlow.DistanceVariationCutoff
+import MorganTianLib.Ch03.RicciFlow.DistanceVariationCutoffFlow
+import MorganTianLib.Ch03.RicciFlow.ScalarSpacetimeSmooth
+import MorganTianLib.Ch03.RicciFlow.ScalarTimeDerivative
 import MorganTianLib.Ch03.RicciFlow.EvolvingEpsilonNeck
 import MorganTianLib.Ch03.RicciFlow.EvolvingEpsilonNeckConsequences
 import MorganTianLib.Ch03.RicciFlow.ExactSolutions
@@ -128,6 +131,10 @@ import MorganTianLib.Ch03.RicciFlow.EvolvingFrameTransport
 import MorganTianLib.Ch03.RicciFlow.EvolvingTransportOn
 import MorganTianLib.Ch03.RicciFlow.EvolvingTransportRegularity
 import MorganTianLib.Ch03.RicciFlow.EvolvingTransportMetric
+import MorganTianLib.Ch03.RicciFlow.EvolvingTransportCurveMetric
+import MorganTianLib.Ch03.RicciFlow.RicciFlowMetricDerivative
+import MorganTianLib.Ch03.RicciFlow.IntrinsicEvolvingTransport
+import MorganTianLib.Ch03.RicciFlow.RicciEndomorphismContinuity
 import MorganTianLib.Ch03.RicciFlow.Soliton
 import MorganTianLib.Ch03.RicciFlow.SolitonScaleExtras
 import MorganTianLib.Ch03.RicciFlow.SolitonScaleConsequences
