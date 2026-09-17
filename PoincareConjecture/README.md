@@ -10,9 +10,9 @@ or support this development, but they do not define its organization.
 
 ## Status
 
-The evolving six-chapter, seven-stage Morgan--Tian Blueprint currently contains 279
-mathematical declarations and 854 direct prerequisite edges. The live structural
-audit reports one terminal sink (`thm:poincare-conjecture`), all 279 declarations
+The evolving six-chapter, seven-stage Morgan--Tian Blueprint currently contains 280
+mathematical declarations and 856 direct prerequisite edges. The live structural
+audit reports one terminal sink (`thm:poincare-conjecture`), all 280 declarations
 reach it, and no cycles, forward edges, duplicate edges, unresolved references,
 or isolated declarations. Counts are descriptive consequences of the current
 mathematical decomposition; historical snapshots and generated audit dossiers
@@ -29,9 +29,14 @@ finite-net loop-width argument. The Hempel, Plateau--Morrey,
 Douglas--Hildebrandt, and parabolic-flow results are retained as explicit
 imported contracts with their exact registered Morgan--Tian/White/Topping/
 Perelman locations and all hypotheses consumed by later nodes; their classical
-source proofs remain part of the human review boundary. Live nodes remain
-marked `\notready`: this project makes no claim of Lean formalization or expert
-approval.
+source proofs remain part of the human review boundary. Three analytic nodes
+are now Lean-checked: forward-Dini comparison, its finite-downward-jump
+extension (with the terminal endpoint controlled), and the scalar width
+lifetime bound. Their proofs, regression tests, and axiom audit are built by
+`lake build`; see [comparison validation](COMPARISON_VALIDATION.md).
+The remaining nodes stay marked `\notready`. In particular, the geometric
+finite-extinction theorem and the Poincare theorem are not Lean-formalized by
+this contribution, and no independent expert approval is claimed.
 
 Chapter 3 is organized into two implementation stages: Stage 3, **Blow-Up
 Limits, Kappa-Solutions, and Canonical Neighborhoods**, and Stage 4,

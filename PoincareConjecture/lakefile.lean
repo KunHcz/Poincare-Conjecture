@@ -15,3 +15,7 @@ require mathlib from git
 lean_lib PoincareConjecture where
   roots := #[`PoincareConjecture]
   globs := #[.andSubmodules `PoincareConjecture]
+
+@[default_target]
+lean_lib PoincareConjectureTests where
+  roots := #[`PoincareConjectureTests]
