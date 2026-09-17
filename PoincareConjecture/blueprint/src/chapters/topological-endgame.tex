@@ -100,14 +100,25 @@ in one member of the separation, a contradiction.
 \dcref{MT:intro:0.1}
 \source{morgan-tian}
 \uses{def:simply-connected}
-\notready
+\lean{PoincareConjecture.simplyConnected_threeManifold_orientable,
+  PoincareConjecture.simplyConnected_threeManifold_positiveTangentFrames}
+\leanok
 Every connected simply connected smooth $3$-manifold is orientable.
 \end{lemma}
 
 \begin{proof}
-A connected simply connected manifold has no nontrivial connected double
-cover.  Its orientation double cover is therefore trivial, so a consistent
-choice of local orientation exists globally.
+Take the actual tangent-bundle coordinate changes, given by derivatives of
+the manifold chart transitions.  Their nonzero determinants satisfy the
+multiplicative cocycle law.  Their signs therefore glue a discrete two-point
+fiber to form the orientation double cover.  Continuity and the covering
+property follow from the constructed local trivializations.  Lift the identity
+of the simply connected base through this covering, starting at either point
+in one fiber.  The resulting continuous section supplies compatible local
+orientation signs.  In dimension three, reversing all three axes realizes a
+negative sign by an invertible frame map of determinant $-1$.  These local
+frame changes make every actual tangent transition determinant positive.
+This is the positive-transition criterion for orientability; no orientation
+cover or global orientation was assumed as an additional premise.
 \end{proof}
 
 \begin{theorem}[Hamilton roundness for positive Ricci curvature]

@@ -1,5 +1,6 @@
 import PoincareConjecture
 import PoincareConjectureTopologyTests
+import PoincareConjectureOrientabilityTests
 import Lean.Util.CollectAxioms
 
 /-!

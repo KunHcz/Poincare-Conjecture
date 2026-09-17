@@ -1,6 +1,7 @@
 import PoincareConjecture.Basic
 import PoincareConjecture.Extinction.ScalarBarrier
 import PoincareConjecture.Geometry.SmoothQuotient
+import PoincareConjecture.Geometry.Orientability
 import PoincareConjecture.Topology.FreeProduct
 import PoincareConjecture.Topology.SimplyConnectedCover
 import PoincareConjecture.Topology.Statement

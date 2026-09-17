@@ -40,10 +40,15 @@ of smooth quotient charts and smooth local inverse branches, not an assumed
 smooth quotient projection. The mapping-torus calculation uses a genuine
 integer orbit quotient and identifies the identity model with the actual
 product of the two-sphere and unit circle.
+The simply-connected orientability step is now checked as well: the actual
+tangent transition determinants construct a two-sheeted cover, and lifting
+the identity yields continuous local frame changes with positive transition
+determinants. No orientation cover or global orientation is assumed.
 
 Their proofs, regression tests, and namespace-wide axiom audit are built by
 `lake build`; see [comparison validation](COMPARISON_VALIDATION.md) and
-[topological endgame validation](TOPOLOGY_VALIDATION.md).
+[topological endgame validation](TOPOLOGY_VALIDATION.md), and
+[orientability validation](ORIENTABILITY_VALIDATION.md).
 The remaining nodes stay marked `\notready`. In particular, the geometric
 finite-extinction theorem and the Poincare theorem are not Lean-formalized by
 this contribution, and no independent expert approval is claimed.

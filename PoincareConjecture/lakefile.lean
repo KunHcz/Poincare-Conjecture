@@ -25,4 +25,5 @@ lean_lib PoincareConjecture where
 
 @[default_target]
 lean_lib PoincareConjectureTests where
-  roots := #[`PoincareConjectureTests, `PoincareConjectureTopologyTests]
+  roots := #[`PoincareConjectureTests, `PoincareConjectureTopologyTests,
+    `PoincareConjectureOrientabilityTests]
