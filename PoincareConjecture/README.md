@@ -20,7 +20,7 @@ are not the deliverable for this task. The shared hgraph retains stale
 historical Poincare records from superseded source revisions; they are excluded
 from the active graph and are not live prerequisites.
 
-The route is now a mathematically closed, source-backed candidate Blueprint
+The smooth route is a source-backed candidate Blueprint
 pending human expert review. Source comparison repaired the surgery spacetime
 and cutoff domain, canonical-neighborhood continuation, the corrected Appendix
 A.19/A.20/A.21/A.24 topology interfaces, explicit relative fiber and cap
@@ -32,11 +32,28 @@ Perelman locations and all hypotheses consumed by later nodes; their classical
 source proofs remain part of the human review boundary. Three analytic nodes
 are now Lean-checked: forward-Dini comparison, its finite-downward-jump
 extension (with the terminal endpoint controlled), and the scalar width
-lifetime bound. Their proofs, regression tests, and axiom audit are built by
-`lake build`; see [comparison validation](COMPARISON_VALIDATION.md).
+lifetime bound. Three topological endgame nodes are now checked as well:
+trivial free products have trivial factors, both sphere-bundle models have
+infinite cyclic fundamental group, and a simply connected spherical space
+form is diffeomorphic to the three-sphere. The last result includes proofs
+of smooth quotient charts and smooth local inverse branches, not an assumed
+smooth quotient projection. The mapping-torus calculation uses a genuine
+integer orbit quotient and identifies the identity model with the actual
+product of the two-sphere and unit circle.
+
+Their proofs, regression tests, and namespace-wide axiom audit are built by
+`lake build`; see [comparison validation](COMPARISON_VALIDATION.md) and
+[topological endgame validation](TOPOLOGY_VALIDATION.md).
 The remaining nodes stay marked `\notready`. In particular, the geometric
 finite-extinction theorem and the Poincare theorem are not Lean-formalized by
 this contribution, and no independent expert approval is claimed.
+
+The exact full topological target is
+`PoincareConjecture.TopologicalPoincareStatement`. It does not assume a smooth
+atlas, positive Ricci curvature, a surgery flow, or a spherical presentation.
+The definition records the proposition only. The present smooth blueprint
+additionally needs the three-dimensional smoothability bridge before it
+proves that topological statement; this bridge is not hidden in the target.
 
 Chapter 3 is organized into two implementation stages: Stage 3, **Blow-Up
 Limits, Kappa-Solutions, and Canonical Neighborhoods**, and Stage 4,
@@ -50,6 +67,13 @@ existing order and roles.
 lake exe cache get
 lake build
 ```
+
+The primary package now reuses the Hatcher reference project's checked sphere
+fundamental-group proof at a pinned source commit and subdirectory. Both the
+Lean and Mathlib versions remain unchanged. One existing style warning in
+`HatcherLib.Ch1.Circle` recommends writing a proposition-valued `def` as a
+`theorem`; the reference source is not changed merely to hide that warning.
+This does not affect kernel checking or the transitive axiom audit.
 
 Graph synchronization and local website preview are documented in the root
 `CONTRIBUTING.md`.

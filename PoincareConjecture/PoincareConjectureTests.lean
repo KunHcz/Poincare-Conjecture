@@ -1,4 +1,5 @@
-import PoincareConjecture.Extinction.ScalarBarrier
+import PoincareConjecture
+import PoincareConjectureTopologyTests
 import Lean.Util.CollectAxioms
 
 /-!
